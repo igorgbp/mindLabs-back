@@ -1,69 +1,64 @@
 const mysql = require("mysql");
+const util = require("util");
 
-async function connect() {
-  if (global.connection && global.connection.state !== "disconnected")
-    return global.connection;
+const pool = mysql.createPool({
+  connectionLimit: 10,
+  host: "localhost",
+  user: "root",
+  password: "baguvix6",
+  database: "mindlabs",
+});
 
-  const connection = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "baguvix6",
-    database: "mindlabs",
-  });
-  global.connection = connection;
-  return connection;
-}
-connect();
+const query = util.promisify(pool.query).bind(pool);
 
-async function getUser() {
-  const conn = await connect();
-  result = conn.query("select * from user", (error, results) => {
-    if (error) {
-      console.error("Error executing query:", error);
-      // Handle the error appropriately
-    } else {
-      console.log(results);
-      return results
-    }
-  });
+async function cadUser(data) {
+  try {
+    await query(
+      "INSERT INTO user (username, email, password) VALUES ( ?, ?, ?)",
+      [data.username, data.email, data.password]
+    );
+    return data;
+  } catch (error) {
+    console.error("Error executing query:", error);
+    throw error;
+  }
 }
 
-async function loginCheck(data) {
-  const conn = await connect();
-  console.log('lgch',data)
-  result = conn.query(`select * from user where username="fff"`, (error, results) => {
-    if (error) {
-      console.error("Error executing query:", error);
-      // Handle the error appropriately
-    } else {
-      console.log('logincheck function')
-      console.log(typeof results);
-      return results
-    }
-  });
- 
+async function removeUser(data) {
+  // print('dbfunction',data)
+  try {
+      console.log(data)
+    const results = await query(
+      "DELETE FROM user WHERE username = ? AND password = ?",
+      [data.username, data.password]
+    );
+    return results;
+  } catch (error) {
+    console.error("Error executing query:", error);
+    throw error;
+  }
+}
+async function listUsers() {
+  try {
+    const results = await query("SELECT * FROM user");
+    return results;
+  } catch (error) {
+    console.error("Error executing query:", error);
+    throw error;
+  }
 }
 
-
-async function insertUser(user) {
-  const conn = await connect();
-  console.log(user)
-  result = conn.query(
-    `insert into user values (${user.id},"${user.username}","${user.email}","${user.password}") `,
-    (error, results) => {
-      if (error) {
-        console.error("Error executing query:", error);
-        // Handle the error appropriately
-      } else {
-        // Process the query results
-        console.log("Query results:", results);
-      }
-    }
-  );
-  return user
-
-  console.log("inside funciton");
-  return result;
+async function login(data) {
+  try {
+    const results = await query(
+      "SELECT * FROM user WHERE username = ? AND password = ?",
+      [data.username, data.password]
+    );
+    return results;
+  } catch (error) {
+    console.error("Error executing query:", error);
+    throw error;
+  }
 }
 
-module.exports = { connection, getUser, insertUser, loginCheck};
+module.exports = { cadUser, removeUser, listUsers, login };
