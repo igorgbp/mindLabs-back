@@ -61,4 +61,16 @@ async function login(data) {
   }
 }
 
-module.exports = { cadUser, removeUser, listUsers, login };
+
+async function listProducts() {
+  try {
+    const results = await query(
+      "SELECT * FROM product"
+    );
+    return results;
+  } catch (error) {
+    console.error("Error executing query:", error);
+    throw error;
+  }
+}
+module.exports = { cadUser, removeUser, listUsers, login, listProducts};
