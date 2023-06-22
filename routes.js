@@ -52,9 +52,32 @@ router.post("/login", async (req, res) => {
 });
 
 
+// product
 router.get("/list-products", async (req, res)=>{
   try{
     const products = await listProducts();
+    console.log(products);
+    res.json(products);
+  }catch{
+    console.log('asdf')
+  }
+})
+
+router.get("/list-products-by-category", async (req, res)=>{
+  try{
+    const category = req.body;
+    const products = await listProductsByCategory(category);
+    console.log(products);
+    res.json(products);
+  }catch{
+    console.log('asdf')
+  }
+})
+
+router.get("/list-products-promo", async (req, res)=>{
+  try{
+   
+    const products = await listProductsPromo();
     console.log(products);
     res.json(products);
   }catch{

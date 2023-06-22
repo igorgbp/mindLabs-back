@@ -62,10 +62,10 @@ async function login(data) {
 }
 
 
-async function listProducts() {
+async function listProducts(data) {
   try {
     const results = await query(
-      "SELECT * FROM product"
+      "SELECT * FROM product WHERE category = ?",[data.category]
     );
     return results;
   } catch (error) {
@@ -73,4 +73,6 @@ async function listProducts() {
     throw error;
   }
 }
+
+
 module.exports = { cadUser, removeUser, listUsers, login, listProducts};
