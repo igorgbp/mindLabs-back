@@ -1,5 +1,8 @@
 const express = require("express");
 const app = express();
+
+const dotenv = require('dotenv');
+dotenv.config();
 const routes = require("./routes");
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*'); 
