@@ -2,10 +2,10 @@
     "name": "mindlabs-back",
 
     "version":2,
-    "builds":{
+    "builds":[{
         "src":"app.js",
         "use":"@vercel/node"
-    },
+    }],
     "routes":[
         {
             "src":"(.*)",
