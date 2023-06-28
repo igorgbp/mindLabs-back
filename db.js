@@ -8,8 +8,8 @@ const pool = mysql.createPool({
   password: "",
   database: "mindlabs",
 });
-console.log(process.env.IPDB)
-console.log('baguvix')
+console.log(process.env.IPDB);
+console.log("baguvix");
 const query = util.promisify(pool.query).bind(pool);
 
 async function cadUser(data) {
@@ -31,7 +31,26 @@ async function cadUser(data) {
     throw error;
   }
 }
-
+async function updateUser(data) {
+  try {
+    await query(
+      "UPDATE user SET first_name =? , last_name = ?,  username = ?,  password=? where id = ?",
+      [
+        data.first_name,
+        data.last_name,
+      
+        data.username,
+        data.password,
+ 
+        data.id
+      ]
+    );
+    return data;
+  } catch (error) {
+    console.error("Error executing query:", error);
+    throw error;
+  }
+}
 async function removeUser(data) {
   // print('dbfunction',data)
   try {
@@ -103,11 +122,50 @@ async function listProductsByCategory(data) {
 }
 async function listUserAddress(data) {
   try {
-    const results = await query(
-      "SELECT * FROM address WHERE iduser = ?",
-      [data.userId]
-    );
+    const results = await query("SELECT * FROM address WHERE iduser = ?", [
+      data.userId,
+    ]);
     return results;
+  } catch (error) {
+    console.error("Error executing query:", error);
+    throw error;
+  }
+}
+async function cadAddress(data) {
+  try {
+    const {number, street, neighborhood, city, state, complement} = data.address;
+    await query("INSERT INTO address (iduser, street, number, neighborhood, city, state, complement) VALUES ( ?, ?,?,?,?,?,?)", [
+      data.id,
+      street ,number , neighborhood,city, state,complement
+    ]);
+    return data;
+  } catch (error) {
+    console.error("Error executing query:", error);
+    throw error;
+  }
+}
+
+async function removeAddress(data) {
+  try {
+    console.log('sql', data.iduser)
+    await query("delete from address where iduser = ? AND idaddress = ?", [
+      data.iduser, 
+      data.idaddress
+    ]);
+    return data;
+  } catch (error) {
+    console.error("Error executing query:", error);
+    throw error;
+  }
+}
+
+async function cadFavorite(data) {
+  try {
+    await query("INSERT INTO favorite VALUES ( ?, ?)", [
+      data.userId,
+      data.productId,
+    ]);
+    return data;
   } catch (error) {
     console.error("Error executing query:", error);
     throw error;
@@ -115,11 +173,15 @@ async function listUserAddress(data) {
 }
 module.exports = {
   cadUser,
+  updateUser,
   removeUser,
   listUsers,
   login,
   listProducts,
   listProductsByCategory,
   listProductsFavorite,
-  listUserAddress
+  listUserAddress,
+  cadFavorite,
+  cadAddress,
+  removeAddress
 };

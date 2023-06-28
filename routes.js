@@ -1,13 +1,17 @@
 const express = require("express");
 const {
   cadUser,
+  updateUser,
   removeUser,
   listUsers,
   login,
   listProducts,
   listProductsFavorite,
   listProductsByCategory,
-  listUserAddress
+  listUserAddress,
+  removeAddress,
+  cadAddress,
+  cadFavorite,
 } = require("./db");
 
 const router = express.Router();
@@ -36,6 +40,17 @@ router.delete("/remove-user", async (req, res) => {
   }
 });
 
+router.post("/update-user", async (req, res) => {
+  try {
+    const cadData = req.body;
+    console.log('asd',cadData)
+    const cad = await updateUser(cadData);
+    res.json(cad);
+  } catch (error) {
+    console.error("Error during cad-user:", error);
+    res.status(500).json({ error: "Internal server error, erro na routes.js" });
+  }
+});
 router.get("/list-users", async (req, res) => {
   try {
     const users = await listUsers();
@@ -60,7 +75,19 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// product
+//favorites 
+router.post("/cad-favorite", async (req, res) => {
+  try {
+    const cadFavoriteData = req.body;
+    const result = await cadFavorite(cadFavoriteData);
+    res.json(result);
+  } catch (error) {
+    console.error("Error during cad-user:", error);
+    res.status(500).json({ error: "Internal server error, erro na routes.js" });
+  }
+});
+
+//list product
 router.get("/list-products", async (req, res) => {
   try {
     const products = await listProducts();
@@ -103,8 +130,31 @@ router.get("/list-products-promo", async (req, res) => {
 });
 
 //address
+router.post("/cad-address", async (req, res) => {
+  try {
+    const cadAddressData = req.body;
+    console.log(cadAddressData)
+    const result = await cadAddress(cadAddressData);
+    res.json(result);
+  } catch (error) {
+    console.error("Error during cad-user:", error);
+    res.status(500).json({ error: "Internal server error, erro na routes.js" });
+  }
+});
 
-router.post("/list-user-address", async (req, res) => {
+router.post("/remove-address", async (req, res) => {
+  try {
+    const rmAddressData = req.body;
+    console.log(rmAddressData)
+    const result = await removeAddress(rmAddressData);
+    res.json(result);
+  } catch (error) {
+    console.error("Error during cad-user:", error);
+    res.status(500).json({ error: "Internal server error, erro na routes.js" });
+  }
+});
+
+router.post("/list-address", async (req, res) => {
   try {
     const id = req.body;
     const addresslist = await listUserAddress(id);

@@ -1,18 +1,19 @@
-const express = require("express");
-const app = express();
-const cors = require('cors');
-
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 dotenv.config();
+const express = require("express");
+
+const cors = require("cors");
+
 const routes = require("./routes");
 
 // Configurar o CORS
+const app = express();
 app.use(cors());
 
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*'); 
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
   next();
 });
