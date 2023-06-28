@@ -1,4 +1,6 @@
 {
+    "name": "mindlabs-back",
+
     "version":2,
     "builds":{
         "src":"app.js",
