@@ -1,0 +1,15 @@
+{
+    "name": "mindlabs-back",
+"version":2,
+"public":true,
+"build":{
+    "src":"app.js",
+    "use":"@vercel/node"
+},
+"routes":[
+    {
+        "src":"/(.*)",
+        "dest":"app.js"
+    }
+]
+}
