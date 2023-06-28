@@ -3,7 +3,7 @@ const util = require("util");
 
 const pool = mysql.createPool({
   connectionLimit: 10,
-  host: process.env.IPDB,
+  host: '35.198.35.238',
   user: "root",
   password: "",
   database: "mindlabs",
